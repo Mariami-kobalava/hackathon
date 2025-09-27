@@ -4,7 +4,7 @@ import requests
 
 # --- Настройки ---
 API_KEY = "bmlrYS50YXF0YXFpc2h2aWxpLjFAYnR1LmVkdS5nZQ:oyWHcZETdtgqN2peijfXy"  # clientKey:secret
-SOURCE_URL = "https://d-id-public-bucket.s3.us-west-2.amazonaws.com/alice.jpg"
+SOURCE_URL = "https://i.postimg.cc/jd75LjyC/Screenshot-2025-09-27-010858.png"
 SCRIPT_TEXT = "Making videos is easy with D-ID"
 
 # Папка для сохранения видео
@@ -23,6 +23,9 @@ payload = {
             "voice_id": "en-US-Emma2:DragonHDLatestNeural"
         }
 
+    },
+    "config": {
+        "stitch": "true"
     },
     "presenter_id": "v2_public_Amber@0zSz8kflCN"
 }
