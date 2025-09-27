@@ -54,18 +54,58 @@ async function askBot() {
   const chatBox = document.getElementById("chat-box");
   chatBox.innerHTML += `<p><b>შენ:</b> ${input}</p>`;
 
-  // Backend-ის მაგივრად ახლა ლოკალურად qa_data
-  const data = qa_data[input] || {
-    answer: "Sorry, I don't have an answer for that.",
-    video_url: "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4"
-  };
+  // Show loading message
+  chatBox.innerHTML += `<p><b>ბოტი:</b> <i>Generating video response...</i></p>`;
 
-  chatBox.innerHTML += `<p><b>ბოტი:</b> ${data.answer}</p>`;
+  try {
+    // Call backend API
+    const response = await fetch('/ask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ question: input })
+    });
 
-  const video = document.getElementById("videoPlayer");
-  const source = document.getElementById("videoSource");
-  source.src = data.video_url;
-  video.load();
+    const data = await response.json();
+
+    // Remove loading message and add real response
+    const lastMsg = chatBox.lastElementChild;
+    lastMsg.innerHTML = `<b>ბოტი:</b> ${data.answer}`;
+
+    // Add status message
+    if (data.status === 'success') {
+      chatBox.innerHTML += `<p><i>D-ID video generated successfully!</i></p>`;
+    } else if (data.status === 'fallback') {
+      chatBox.innerHTML += `<p><i>Using fallback video (D-ID failed)</i></p>`;
+    } else if (data.status === 'error') {
+      chatBox.innerHTML += `<p><i>Error: ${data.error}</i></p>`;
+    }
+
+    // Update video source
+    const video = document.getElementById("videoPlayer");
+    const source = document.getElementById("videoSource");
+    source.src = data.video_url;
+    video.load();
+
+  } catch (error) {
+    // Fallback to local data if API fails
+    const data = qa_data[input] || {
+      answer: "Sorry, I don't have an answer for that.",
+      video_url: "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4"
+    };
+
+    const lastMsg = chatBox.lastElementChild;
+    lastMsg.innerHTML = `<b>ბოტი:</b> ${data.answer} <i>(offline mode)</i>`;
+
+    const video = document.getElementById("videoPlayer");
+    const source = document.getElementById("videoSource");
+    source.src = data.video_url;
+    video.load();
+  }
+
+  // Clear input
+  document.getElementById("user-input").value = "";
 }
 
 // ვიდეოს Play ღილაკი
