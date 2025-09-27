@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎤 ემოციური ჩატბოტი</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f9; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
+    .container { text-align:center; background:white; padding:20px; border-radius:12px; width:500px; box-shadow:0 4px 12px rgba(0,0,0,0.15);}
+    #chat-box { border:1px solid #ddd; padding:10px; height:150px; overflow-y:auto; margin-bottom:15px; text-align:left;}
+    input {padding:8px;width:70%;border:1px solid #aaa;border-radius:6px;}
+    button {padding:8px 14px;border:none;background:#0078ff;color:white;border-radius:6px;cursor:pointer;}
+    button:hover {background:#005fcc;}
+    video {margin-top:15px;width:100%;border-radius:8px;}
+    #playButton {margin-top:5px; background:#28a745;}
+    #playButton:hover {background:#218838;}
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🤖 უძლიერესი ადმინისტრაცია</h1>
+  <div id="chat-box"></div>
+  <input type="text" id="user-input" placeholder="შეიყვანე კითხვა...">
+  <button onclick="askBot()">კითხე</button>
+
+  <video id="videoPlayer" controls>
+    <source id="videoSource" src="" type="video/mp4">
+    თქვენი ბრაუზერი არ უჭერს მხარს ვიდეოს.
+  </video>
+  <br>
+  <button id="playButton" onclick="playVideo()">▶ Play Video</button>
+</div>
+
+<script>
+const qa_data = {
+  "When does the semester start?": {
+    answer: "The semester starts on September 1st.",
+    video_url: "https://youtu.be/QLpArkPb-YU"
+  },
+  "How can I contact administration?": {
+    answer: "You can contact administration via email admin@university.com.",
+    video_url: "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4"
+  },
+  "What are the library hours?": {
+    answer: "Library is open 8AM to 10PM daily.",
+    video_url: "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4"
+  }
+  // შეგიძლია დაამატო დანარჩენი კითხვები + ემოციური ვიდეოები
+};
+
+async function askBot() {
+  const input = document.getElementById("user-input").value;
+  if(!input) return;
+
+  const chatBox = document.getElementById("chat-box");
+  chatBox.innerHTML += `<p><b>შენ:</b> ${input}</p>`;
+
+  // Backend-ის მაგივრად ახლა ლოკალურად qa_data
+  const data = qa_data[input] || {
+    answer: "Sorry, I don't have an answer for that.",
+    video_url: "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4"
+  };
+
+  chatBox.innerHTML += `<p><b>ბოტი:</b> ${data.answer}</p>`;
+
+  const video = document.getElementById("videoPlayer");
+  const source = document.getElementById("videoSource");
+  source.src = data.video_url;
+  video.load();
+}
+
+// ვიდეოს Play ღილაკი
+function playVideo() {
+  const video = document.getElementById("videoPlayer");
+  video.play();
+}
+</script>
+</body>
+</html>
