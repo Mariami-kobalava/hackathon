@@ -1,34 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ka">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ემოციური ჩატბოტი უნივერსიტეტის ადმინისტრაციისთვის">
   <title>🎤 ემოციური ჩატბოტი</title>
   <style>
-    body { font-family: Arial; background: #f4f4f9; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
-    .container { text-align:center; background:white; padding:20px; border-radius:12px; width:500px; box-shadow:0 4px 12px rgba(0,0,0,0.15);}
-    #chat-box { border:1px solid #ddd; padding:10px; height:150px; overflow-y:auto; margin-bottom:15px; text-align:left;}
-    input {padding:8px;width:70%;border:1px solid #aaa;border-radius:6px;}
-    button {padding:8px 14px;border:none;background:#0078ff;color:white;border-radius:6px;cursor:pointer;}
-    button:hover {background:#005fcc;}
-    video {margin-top:15px;width:100%;border-radius:8px;}
-    #playButton {margin-top:5px; background:#28a745;}
-    #playButton:hover {background:#218838;}
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      text-align: center;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 2em;
+    }
+
+    #chat-box {
+      border: 2px solid #e0e0e0;
+      padding: 20px;
+      height: 200px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      text-align: left;
+      background: #f8f9fa;
+      border-radius: 10px;
+      scroll-behavior: smooth;
+    }
+
+    .input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #ddd;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    #user-input:focus {
+      border-color: #667eea;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    video {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    #playButton {
+      margin-top: 15px;
+      background: linear-gradient(45deg, #28a745, #20c997);
+      min-width: 120px;
+    }
+
+    #playButton:hover {
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .input-container {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1>🤖 უძლიერესი ადმინისტრაცია</h1>
-  <div id="chat-box"></div>
-  <input type="text" id="user-input" placeholder="შეიყვანე კითხვა...">
-  <button onclick="askBot()">კითხე</button>
+  <main class="container">
+    <header>
+      <h1>🤖 უძლიერესი ადმინისტრაცია</h1>
+    </header>
 
-  <video id="videoPlayer" controls>
-    <source id="videoSource" src="" type="video/mp4">
-    თქვენი ბრაუზერი არ უჭერს მხარს ვიდეოს.
-  </video>
-  <br>
-  <button id="playButton" onclick="playVideo()">▶ Play Video</button>
-</div>
+    <section id="chat-section">
+      <div id="chat-box" role="log" aria-live="polite" aria-label="Chat messages"></div>
+
+      <div class="input-container">
+        <label for="user-input" class="visually-hidden">შეიყვანე კითხვა</label>
+        <input type="text" id="user-input" placeholder="შეიყვანე კითხვა..." maxlength="500" aria-describedby="input-help">
+        <button type="button" onclick="askBot()" aria-label="გაგზავნე კითხვა">კითხე</button>
+      </div>
+      <div id="input-help" class="visually-hidden">დააწექით Enter-ს ან ღილაკს კითხვის გასაგზავნად</div>
+    </section>
+
+    <section id="video-section">
+      <video id="videoPlayer" controls preload="metadata" aria-label="პასუხის ვიდეო">
+        <source id="videoSource" src="" type="video/mp4">
+        <p>თქვენი ბრაუზერი არ უჭერს მხარს ვიდეოს. <a href="" download>ჩამოტვირთეთ ვიდეო</a></p>
+      </video>
+      <br>
+      <button type="button" id="playButton" onclick="playVideo()" aria-label="ვიდეოს დაკვრა">▶ Play Video</button>
+    </section>
+  </main>
 
 <script>
 const qa_data = {
@@ -43,8 +177,27 @@ const qa_data = {
   "What are the library hours?": {
     answer: "Library is open 8AM to 10PM daily.",
     video_url: "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4"
+  },
+  "Does BTU have exchange programs?": {
+    answer: "Yes, BTU offers various exchange programs with partner universities worldwide.",
+    video_url: "/videos/Does-BTU-have-exchange-programs.mp4"
+  },
+  "How can a student status be restored?": {
+    answer: "Student status can be restored by submitting an application to the registrar's office with required documentation.",
+    video_url: "/videos/How-can-a-student-status-be-restored.mp4"
+  },
+  "How is the scholarship awarded?": {
+    answer: "Scholarships are awarded based on academic merit and financial need through our financial aid office.",
+    video_url: "/videos/How-is-the-scholarship-awarded.mp4"
+  },
+  "How is your university helping me in career care?": {
+    answer: "Our university provides comprehensive career services including counseling, internship programs, and job placement assistance.",
+    video_url: "/videos/How-is-your-university-helping-me-in-career-care.mp4"
+  },
+  "What happens if I fail a course and don't earn the credit?": {
+    answer: "If you fail a course, you can retake it in the next semester or during summer sessions to earn the required credits.",
+    video_url: "/videos/What-happens-if-I-fail-a-course-and-dont-earn-the-credit.mp4"
   }
-  // შეგიძლია დაამატო დანარჩენი კითხვები + ემოციური ვიდეოები
 };
 
 async function askBot() {
@@ -76,10 +229,6 @@ async function askBot() {
     // Add status message
     if (data.status === 'success') {
       chatBox.innerHTML += `<p><i>D-ID video generated successfully!</i></p>`;
-    } else if (data.status === 'fallback') {
-      chatBox.innerHTML += `<p><i>Using fallback video (D-ID failed)</i></p>`;
-    } else if (data.status === 'error') {
-      chatBox.innerHTML += `<p><i>Error: ${data.error}</i></p>`;
     }
 
     // Update video source
